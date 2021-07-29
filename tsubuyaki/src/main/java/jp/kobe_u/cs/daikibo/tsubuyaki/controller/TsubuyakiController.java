@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import jp.kobe_u.cs.daikibo.tsubuyaki.entity.Tsubuyaki;
 import jp.kobe_u.cs.daikibo.tsubuyaki.serrvice.TsubuyakiService;
 
 @Controller
-
-  
 public class TsubuyakiController {
     @Autowired
     TsubuyakiService ts;
@@ -41,5 +41,13 @@ public class TsubuyakiController {
         //サービスに投稿処理を依頼
         ts.postTsubuyaki(t);
         return "redirect:/read"; //メイン画面に転送
+    }
+
+    @GetMapping("/search")
+    String searchTsubuyaki(@RequestParam("keyword") String keyword, Model model){
+        List<Tsubuyaki> hit_tsubuyaki = ts.getTargetTsubuyaki(keyword);
+        model.addAttribute("tsubuyakiList", hit_tsubuyaki);
+        model.addAttribute("kw", keyword);
+        return "searched";
     }
 }
